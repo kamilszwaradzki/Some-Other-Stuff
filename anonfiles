@@ -1,0 +1,36 @@
+#!/usr/bin/env python
+"""
+how to run the script with a doubleclick? (work with Gnome)
+
+> sudo apt install dconf-editor (if it is not installed.)
+> dconf-editor
+> org -> gnome -> nautilus -> preferences -> executable-text-activation
+> use default value -> off
+> other value -> launch
+
+"""
+
+import requests, tkFileDialog, pyperclip, tkMessageBox, os
+from Tkinter import *
+
+f = tkFileDialog.askopenfilename()
+
+files = {
+    'file': (os.path.basename(f), open(f, 'rb')),
+}
+
+r = requests.post('https://api.anonfiles.com/upload', files=files)
+
+screen = Tk()
+text = Text(screen)
+text.pack()
+text.insert(END,r.json()['data']['file']['url']['short'] if r.json()["status"] == True else r.text)
+
+def apress():
+    pyperclip.copy(r.json()['data']['file']['url']['short'])
+
+btn = Button(screen, text = 'copy', width = 5, command = apress) 
+btn.pack()
+
+
+mainloop()
