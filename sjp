@@ -30,7 +30,7 @@ class MyHTMLParser(HTMLParser):
 #creating an object of the overridden class
 parser = MyHTMLParser()
 
-#zamiana polskich znakow na hex unicode
+#change polish characters for hex unicode
 
 unicode_hex = { 'ą':"%C4%85",
                 'ż':"%C5%BC",
@@ -48,11 +48,11 @@ lista_fraz = lista_fraz[1:]
 fraz = '+'.join(lista_fraz)
 fraz = fraz.lower()
 for k in unicode_hex:
-    fraz = fraz.replace(k,unicode_hex[k]) #aby strona mogła odczytać polskie znaki
+    fraz = fraz.replace(k,unicode_hex[k]) # replace polish characters to hex unicode
 
 html_page = urllib2.urlopen("http://www.sjp.pl/"+fraz)
 
-#Wyrażenie regularne
+# Regular Expression
 regex = re.findall('<p style="margin:.*?;?">(?:.|[żźćńółęąśŻŹĆĄŚĘŁÓŃ])*?(?<=<\/p>)',str(html_page.read()));
 
 utf_8bytes = {"\\xc3\\x93":"Ó","\\xc3\\xb3":"ó","\\xc4\\x84":"Ą","\\xc4\\x85":"ą","\\xc4\\x86":"Ć","\\xc4\\x87":"ć","\\xc4\\x98":"Ę","\\xc4\\x99":"ę","\\xc5\\x81":"Ł","\\xc5\\x82":"ł","\\xc5\\x83":"Ń","\\xc5\\x84":"ń","\\xc5\\x9a":"Ś","\\xc5\\x9b":"ś","\\xc5\\xb9":"Ź","\\xc5\\xba":"ź","\\xc5\\xbb":"Ż","\\xc5\\xbc":"ż"}
@@ -60,13 +60,13 @@ utf_8bytes = {"\\xc3\\x93":"Ó","\\xc3\\xb3":"ó","\\xc4\\x84":"Ą","\\xc4\\x85"
 if not regex:
     print ("\'" + ' '.join(lista_fraz) +'\'' + " nie występuje w słowniku.")
 else:
-    #Pętla zamieniająca slashe na polskie znaki bez zamiany listy w string
+    # Loop changing slashs for polish characters without changing list to string
     for klucz in utf_8bytes:
         regex=[w.replace(klucz,utf_8bytes[klucz]) for w in regex];
     regex=[w.replace("<br />",'\n') for w in regex];
     regex=[w.replace("&quot;",'\"') for w in regex]
-    str1 = ''.join(regex); #zamiana list w string
+    str1 = ''.join(regex); # list to string
     str1 = str1[str1.index('>')+1:]
     str1 = str1[:str1.index('<')]
-    fraza = ' '.join(lista_fraz) #zamiana listy fraz w string
+    fraza = ' '.join(lista_fraz) # Phrase's list to string
     print("\t\t\t\t"+fraza.title()+"\n\n"+str1)
