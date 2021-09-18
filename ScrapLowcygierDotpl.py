@@ -8,6 +8,8 @@ how to run the script with a doubleclick? (work with Gnome)
 > use default value -> off
 > other value -> launch
 
+install required packages(on Ubuntu)
+sudo apt install python3-bs4 python3-gi gobject-introspection gir1.2-gtk-3.0
 """
 
 from bs4 import BeautifulSoup
